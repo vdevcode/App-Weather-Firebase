@@ -1,24 +1,17 @@
 # wheather-firebase
 
-## Project setup
+## Công nghệ cho dự án này
 ```
-yarn install
-```
-
-### Compiles and hot-reloads for development
-```
-yarn serve
+Build project weather app with call axios work,use firebase database 
 ```
 
-### Compiles and minifies for production
+### tải xuống các gói backages phục vụ project
 ```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
+install project vuejs,tailwindcss,sass,firebase install
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### chạy project
+```
+npm serve run project , create project firebase
+```
+
