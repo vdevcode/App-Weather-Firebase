@@ -1,30 +1,78 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view />
+  <div class="">
+    <nav-app />
+    <router-view :cities="cities" />
+  </div>
 </template>
 
+<script>
+import axios from "axios";
+import db from "./firebase/firebaseinit.js";
+import NavApp from "@/components/NavApp.vue";
+
+export default {
+  name: "App",
+  components: {
+    NavApp,
+  },
+  data() {
+    return {
+      api_key: "f1937617cb4bbd501edd56b39b759522",
+      city: "Dalat",
+      cities: [],
+    };
+  },
+  created() {
+    this.getCityWeather();
+  },
+  methods: {
+    getCityWeather() {
+      let firebaseDB = db.collection("cities");
+      firebaseDB.onSnapshot((snapshot) => {
+        snapshot.docChanges().forEach(async (doc) => {
+          if (doc.type === "added") {
+            try {
+              const response = await axios.get(
+                `https://api.openweathermap.org/data/2.5/weather?q=${
+                  doc.doc.data().city
+                }&units=imperial&appid=${this.api_key}`
+              );
+              const data = response.data;
+              firebaseDB
+                .doc(doc.doc.id)
+                .update({
+                  currentWeather: data,
+                })
+                .then(() => {
+                  this.cities.push(doc.doc.data());
+                });
+            } catch (err) {
+              console.log(err);
+            }
+          }
+        });
+      });
+    },
+    async getCurrentWeather() {
+      await axios
+        .get(
+          `https://api.openweathermap.org/data/2.5/weather?q=${this.city}&units=imperial&appid=${this.api_key}`
+        )
+        .then((response) => {
+          console.log(response.data);
+        });
+    },
+  },
+};
+</script>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+  font-size: 62.5%;
 }
 </style>
