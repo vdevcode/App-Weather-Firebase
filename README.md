@@ -1,4 +1,4 @@
-# wheather-firebase
+# weather-firebase
 
 ## Công nghệ cho dự án này
 ```
