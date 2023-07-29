@@ -1,6 +1,11 @@
 <template>
   <div class="">
-    <nav-app />
+    <modal-app
+      v-if="modalOpen"
+      v-on:close-modal="toggleModal"
+      :api_key="api_key"
+    />
+    <nav-app v-on:add-city="toggleModal" />
     <router-view :cities="cities" />
   </div>
 </template>
@@ -9,17 +14,19 @@
 import axios from "axios";
 import db from "./firebase/firebaseinit.js";
 import NavApp from "@/components/NavApp.vue";
+import ModalApp from "@/components/ModalApp.vue";
 
 export default {
   name: "App",
   components: {
     NavApp,
+    ModalApp,
   },
   data() {
     return {
       api_key: "f1937617cb4bbd501edd56b39b759522",
-      city: "Dalat",
       cities: [],
+      modalOpen: null,
     };
   },
   created() {
@@ -53,14 +60,17 @@ export default {
         });
       });
     },
-    async getCurrentWeather() {
-      await axios
-        .get(
-          `https://api.openweathermap.org/data/2.5/weather?q=${this.city}&units=imperial&appid=${this.api_key}`
-        )
-        .then((response) => {
-          console.log(response.data);
-        });
+    // async getCurrentWeather() {
+    //   await axios
+    //     .get(
+    //       `https://api.openweathermap.org/data/2.5/weather?q=${this.city}&units=imperial&appid=${this.api_key}`
+    //     )
+    //     .then((response) => {
+    //       console.log(response.data);
+    //     });
+    // },
+    toggleModal() {
+      this.modalOpen = !this.modalOpen;
     },
   },
 };

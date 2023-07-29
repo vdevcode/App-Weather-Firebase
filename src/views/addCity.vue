@@ -1,5 +1,7 @@
 <template>
-  <div class="container sm:grid-cols-2 grid bg-[#31363d] w-full h-full">
+  <div
+    class="container mt-[57.5px] sm:grid-cols-2 grid bg-[#31363d] w-full h-full"
+  >
     <div class="" v-for="(city, index) in cities" :key="index">
       <city-app :city="city" />
     </div>
