@@ -5,8 +5,8 @@
       v-on:close-modal="toggleModal"
       :api_key="api_key"
     />
-    <nav-app v-on:add-city="toggleModal" />
-    <router-view :cities="cities" />
+    <nav-app v-on:add-city="toggleModal" v-on:edit-city="toggleEdit" />
+    <router-view :cities="cities" :edit="edit" />
   </div>
 </template>
 
@@ -27,6 +27,7 @@ export default {
       api_key: "f1937617cb4bbd501edd56b39b759522",
       cities: [],
       modalOpen: null,
+      edit: null,
     };
   },
   created() {
@@ -37,7 +38,7 @@ export default {
       let firebaseDB = db.collection("cities");
       firebaseDB.onSnapshot((snapshot) => {
         snapshot.docChanges().forEach(async (doc) => {
-          if (doc.type === "added") {
+          if (doc.type === "added" && !doc.doc.Nd) {
             try {
               const response = await axios.get(
                 `https://api.openweathermap.org/data/2.5/weather?q=${
@@ -56,6 +57,12 @@ export default {
             } catch (err) {
               console.log(err);
             }
+          } else if (doc.type === "added" && doc.doc.Nd) {
+            this.cities.push(doc.doc.data());
+          } else if (doc.type === "removed") {
+            this.cities = this.cities.filter((city) => {
+              return city.city !== doc.doc.data().city;
+            });
           }
         });
       });
@@ -71,6 +78,9 @@ export default {
     // },
     toggleModal() {
       this.modalOpen = !this.modalOpen;
+    },
+    toggleEdit() {
+      this.edit = !this.edit;
     },
   },
 };

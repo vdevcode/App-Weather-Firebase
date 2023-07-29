@@ -6,6 +6,10 @@ module.exports = {
       backgroundColors: {
         // "dracula": "#282a36",
       },
+      zIndex: {
+        1: "1",
+        2: "2",
+      },
       screens: {
         sm: "400px",
         md: "768px",

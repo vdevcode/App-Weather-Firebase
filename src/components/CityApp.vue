@@ -1,11 +1,19 @@
 <template>
   <div class="city">
-    <h1
-      class="text-white text-[1.5rem] rounded z-[3] py-2 px-4 bg-black w-full items-center"
-    >
-      <i class="fa-solid fa-globe mr-2 text-[1.3rem]"></i>
-      {{ this.city.city }} , {{ this.city.currentWeather.sys.country }}
-    </h1>
+    <i
+      class="fa-solid fa-trash z-2 text-3xl text-red-400 font-semibold absolute top-6 right-[10px]"
+      ref="edit"
+      v-if="edit"
+      @click="removeCity"
+    ></i>
+    <div class="inline-block z-1">
+      <h1
+        class="text-white text-[1.5rem] inline-block rounded py-2 px-4 bg-black items-center"
+      >
+        <i class="fa-solid fa-globe mr-2 text-[1.3rem] text-green-300"></i>
+        {{ this.city.city }} , {{ this.city.currentWeather.sys.country }}
+      </h1>
+    </div>
     <div class="weather">
       <span
         >{{
@@ -34,16 +42,34 @@
 </template>
 
 <script>
+import db from "../firebase/firebaseinit.js";
+
 export default {
   name: "CityApp",
-  props: ["city"],
+  props: ["city", "edit"],
   data() {
-    return {};
+    return {
+      id: null,
+    };
   },
   created() {
     console.log(this.city);
   },
-  methods: {},
+  methods: {
+    removeCity() {
+      db.collection("cities")
+        .where("city", "==", `${this.city.city}`)
+        .get()
+        .then((docs) => {
+          docs.forEach((doc) => {
+            this.id = doc.id;
+          });
+        })
+        .then(() => {
+          db.collection("cities").doc(this.id).delete();
+        });
+    },
+  },
 };
 </script>
 
@@ -83,6 +109,7 @@ export default {
     right: 0;
     width: 100%;
     height: 100%;
+    z-index: 0;
   }
 }
 </style>

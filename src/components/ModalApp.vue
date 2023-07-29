@@ -49,13 +49,12 @@ export default {
     },
     async addCity() {
       if (this.city === "") {
-        this.isShowMessage = !this.isShowMessage;
-        console.log("oke");
+        this.isShowMessage = true;
       } else {
-        this.isShowMessage = !this.isShowMessage;
         const res = await axios.get(
           `https://api.openweathermap.org/data/2.5/weather?q=${this.city}&units=imperial&appid=${this.api_key}`
         );
+        this.isShowMessage = false;
         const data = await res.data;
         db.collection("cities")
           .doc()
