@@ -1,5 +1,5 @@
 <template>
-  <div class="city">
+  <div class="city" @click="gotoWeather">
     <i
       class="fa-solid fa-trash z-2 text-3xl text-red-400 font-semibold absolute top-6 right-[10px]"
       ref="edit"
@@ -68,6 +68,16 @@ export default {
         .then(() => {
           db.collection("cities").doc(this.id).delete();
         });
+    },
+    gotoWeather(e) {
+      if (e.target === this.$refs.edit) {
+        console.log("ruun");
+      } else {
+        this.$router.push({
+          name: "weather",
+          params: { city: this.city.city },
+        });
+      }
     },
   },
 };

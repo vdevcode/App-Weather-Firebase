@@ -6,7 +6,7 @@
       :api_key="api_key"
     />
     <nav-app v-on:add-city="toggleModal" v-on:edit-city="toggleEdit" />
-    <router-view :cities="cities" :edit="edit" />
+    <router-view :cities="cities" :edit="edit" :api_key="api_key" />
   </div>
 </template>
 
